@@ -1,0 +1,146 @@
+type Query {
+  DMPQueueEvents(filter: DMPQueueEventFilterInput) : [DMPQueueEvent]!
+  AccountId20s(filter: AccountId20FilterInput) : [AccountId20]!
+  ExternalAccountId32s(filter: ExternalAccountId32FilterInput) : [ExternalAccountId32]!
+  XTokensTransferredMultiAssetsEvents(filter: XTokensTransferredMultiAssetsFilterInput) : [XTokensTransferredMultiAssetsEvent]!
+  XTokensTransferredEvents(filter: XTokensTransferredEventFilterInput) : [XTokensTransferredEvent]!
+}
+
+
+input DMPQueueEventFilterInput {
+  toAddressId20Id: StringQueryOperatorInput
+  sentAtKusamaBlockNum: StringQueryOperatorInput
+  dmpQueueID: StringQueryOperatorInput
+}
+
+input AccountId20FilterInput {
+  id: StringQueryOperatorInput
+}
+input ExternalAccountId32FilterInput {
+  id: StringQueryOperatorInput
+}
+
+input XTokensTransferredEventFilterInput {
+  extrinsicHash: StringQueryOperatorInput
+  fromAccountId20Id: StringQueryOperatorInput
+  toAccountId32Id: StringQueryOperatorInput
+  transferredToken: StringQueryOperatorInput
+}
+
+input XTokensTransferredMultiAssetsFilterInput {
+  xcmpMessage: StringQueryOperatorInput
+  extrinsicHash: StringQueryOperatorInput
+  fromAccountId20Id: StringQueryOperatorInput
+  toAccountId32Id: StringQueryOperatorInput
+  transferredToken: StringQueryOperatorInput
+}
+
+input StringQueryOperatorInput {
+  eq: String
+  ne: String
+  in: [String]
+  nin: [String]
+  regex: String
+  glob: String
+}
+
+
+
+type Transaction @entity {
+    id: ID! # Transaction hash
+    value: BigInt!
+    to: String!
+    from: String!
+    contractAddress: String!
+}
+  
+type Approval @entity {
+    id: ID! # Transaction hash
+    value: BigInt!
+    owner: String!
+    spender: String!
+    contractAddress: String!
+}
+
+
+type AccountId20 @entity {
+  id: ID! #this primary key is set as the toAddress
+}
+type ExternalAccountId32 @entity {
+  id: ID! #this primary key is set as the toAddress
+}
+
+type DMPQueueEvent @entity {
+  id: ID! #id is a required field
+  dmpQueueID: String
+  blockNum: BigInt
+  blockHash: String
+  timestamp: Date
+  extrinsicHash: String
+  signer: String
+  NumDownMsgsReceived: Int
+  receivedAmount: String
+  asset: String 
+  toAddressId20: AccountId20!
+  treasuryAmount: String
+  treasuryAddress: String
+  weightUsed: String
+  sentAtKusamaBlockNum: String
+  downwardMsg: String
+  downMsgHash: String
+}
+
+
+
+type XTokensTransferredEvent @entity {
+  id: ID! #id is a required field
+  blockNum: BigInt
+  blockHash: String
+  timestamp: Date
+  extrinsicHash: String
+  signer: String
+  fromAccountId20: AccountId20
+  transferredToken: String
+  sentAmount: String
+  toAccountId32: ExternalAccountId32
+  totalWithdrawn: String
+  burnedAmount: String
+  toPrecompile: String
+  payload: String
+  evmCoreErrorExitReason: String
+  returnedDeposit: String
+  treasuryFees: String
+  treasuryAdress: String
+  otherFees: String 
+  valAddress: String
+}
+
+type XTokensTransferredMultiAssetsEvent @entity {
+  id: ID! #id is a required field
+  blockNum: BigInt
+  blockHash: String
+  timestamp: Date
+  extrinsicHash: String
+  signer: String
+
+  transferredToken: String
+  transferredTokenGeneralKey: String
+
+  fromAccountId20: AccountId20
+  sentAmount: String
+  toAccountId32: ExternalAccountId32
+  toChainName: String
+  toChainCode: String
+
+  totalWithdrawn: String
+  burnedAmount: String
+  toPrecompile: String
+  payload: String
+  evmCoreErrorExitReason: String
+  returnedDeposit: String
+  treasuryFees: String
+  treasuryAdress: String
+  otherFees: String 
+  valAddress: String
+  xcmpMessage: String
+}
